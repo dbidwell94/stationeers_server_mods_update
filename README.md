@@ -51,8 +51,9 @@ st-update update --config-location <PATH_TO_MODCONFIG_XML> [OPTIONS]
   - Can be specified multiple times to update multiple specific mods
   - If omitted, updates all mods in the config
   
-- `-d, --ignore-disabled`: Skip updating disabled mods (default: `true`)
-  - Set to `false` to update disabled mods as well
+- `-d, --ignore-disabled <BOOLEAN>`: Whether to skip disabled mods (default: `true`)
+  - When `true` (default): Only updates mods marked as `Enabled="true"` in the config
+  - When `false`: Updates all mods regardless of their enabled status
 
 - `-b, --backup-updated`: Backup mods before updating (default: `false`)
   - **Note**: Currently implemented as a parameter but not fully utilized in the codebase
@@ -76,7 +77,7 @@ st-update update --config-location /path/to/modconfig.xml \
   --mod-id 3576112002 --mod-id 3575689739
 ```
 
-#### Update all mods (including disabled)
+#### Update all mods (including disabled ones)
 
 ```bash
 st-update update --config-location /path/to/modconfig.xml --ignore-disabled false
