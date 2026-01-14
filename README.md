@@ -1,10 +1,15 @@
 # Stationeers Server Mod Updater
 
-A command-line tool to automate updating Stationeers server mods via SteamCMD.
+Tools to automate updating Stationeers server mods via SteamCMD.
 
 ## Overview
 
-`st-update` is a Rust-based utility that simplifies the process of updating Stationeers Workshop mods on a server. It reads a `modconfig.xml` file, downloads updated mods using SteamCMD, and relocates them to the appropriate directories.
+This repository provides two implementations for updating Stationeers Workshop mods:
+
+1. **Rust CLI Tool** (`rust/`): A command-line utility for direct server mod management
+2. **Go Library** (`go/`): A library for integration into other Go projects (e.g., Stationeers Server UI)
+
+Both implementations provide the same core functionality: parsing `modconfig.xml` files, downloading mods via SteamCMD, and relocating them to the appropriate directories using hardlinks (with fallback to copy).
 
 ## Features
 
@@ -15,88 +20,47 @@ A command-line tool to automate updating Stationeers server mods via SteamCMD.
 - **Clear error reporting**: Detailed error messages with cause chains
 - **SteamCMD integration**: Automatically finds SteamCMD in PATH or accepts a custom path
 
-## Installation
+## Implementations
 
-### Prerequisites
+### Rust CLI Tool (`rust/`)
+
+A standalone command-line utility for managing server mods.
+
+**Documentation**: See [rust/README.md](rust/README.md) for detailed Rust CLI documentation
+
+**Quick Start**:
+```bash
+cd rust
+cargo build --release
+./target/release/st-update update --config-location /path/to/modconfig.xml
+```
+
+### Go Library (`go/`)
+
+A library package for integrating mod update functionality into Go applications.
+
+**Documentation**: See [go/README.md](go/README.md) for API reference and examples
+
+**Quick Start**:
+```go
+import modupdater "github.com/dbidwell94/stationeers_server_mods_update/go"
+
+opts := modupdater.UpdateOptions{
+    ConfigLocation: "/path/to/modconfig.xml",
+    IgnoreDisabled: true,
+}
+result, err := modupdater.UpdateMods(opts)
+```
+
+## Prerequisites
 
 - **SteamCMD**: Must be installed and accessible. Download from [Valve's SteamCMD wiki](https://developer.valvesoftware.com/wiki/SteamCMD)
+
+For the Rust CLI:
 - **Rust toolchain** (for building from source): Install from [rustup.rs](https://rustup.rs/)
 
-### Building from Source
-
-```bash
-git clone https://github.com/dbidwell94/stationeers_server_mods_update.git
-cd stationeers_server_mods_update
-cargo build --release
-```
-
-The binary will be available at `target/release/st-update`.
-
-## Usage
-
-### Basic Command Structure
-
-```bash
-st-update update --config-location <PATH_TO_MODCONFIG_XML> [OPTIONS]
-```
-
-### Required Arguments
-
-- `-c, --config-location <CONFIG_LOCATION>`: Path to the `modconfig.xml` file
-  - Can also be set via the `CONFIG_LOCATION` environment variable
-
-### Optional Arguments
-
-- `-m, --mod-id <MOD_ID>`: Specific Workshop mod ID(s) to update
-  - Can be specified multiple times to update multiple specific mods
-  - If omitted, updates all mods in the config
-  
-- `-d, --ignore-disabled <BOOLEAN>`: Whether to skip disabled mods (default: `true`)
-  - When `true` (default): Only updates mods marked as `Enabled="true"` in the config
-  - When `false`: Updates all mods regardless of their enabled status
-
-- `-b, --backup-updated`: Backup mods before updating (default: `false`)
-  - **Note**: Currently implemented as a parameter but not fully utilized in the codebase
-
-- `-s, --steam-cmd-path <STEAM_CMD_PATH>`: Custom path to SteamCMD binary
-  - Can also be set via the `STEAM_CMD_PATH` environment variable
-  - If omitted, the tool searches for `steamcmd` in your system's PATH
-
-### Examples
-
-#### Update all enabled mods
-
-```bash
-st-update update --config-location /path/to/modconfig.xml
-```
-
-#### Update specific mods by Workshop ID
-
-```bash
-st-update update --config-location /path/to/modconfig.xml \
-  --mod-id 3576112002 --mod-id 3575689739
-```
-
-#### Update all mods (including disabled ones)
-
-```bash
-st-update update --config-location /path/to/modconfig.xml --ignore-disabled false
-```
-
-#### Use custom SteamCMD path
-
-```bash
-st-update update --config-location /path/to/modconfig.xml \
-  --steam-cmd-path /custom/path/to/steamcmd
-```
-
-#### Using environment variables
-
-```bash
-export CONFIG_LOCATION=/path/to/modconfig.xml
-export STEAM_CMD_PATH=/custom/path/to/steamcmd
-st-update update
-```
+For the Go library:
+- **Go**: 1.21 or later recommended
 
 ## How It Works
 
@@ -176,18 +140,28 @@ The tool provides detailed error messages for various failure scenarios:
 - **Cause**: Permission issues, disk full, or I/O errors during file copying
 - **Solution**: Check disk space and file/directory permissions
 
-## File Structure
+## Repository Structure
 
 ```
 stationeers_server_mods_update/
-├── src/
-│   ├── main.rs          # CLI argument parsing and entry point
-│   ├── update.rs        # Core update logic and SteamCMD integration
-│   ├── modconfig.rs     # XML parsing for modconfig.xml
-│   └── utils/
-│       ├── mod.rs       # Utilities module
-│       └── fs.rs        # File system operations (copying/linking)
-├── Cargo.toml           # Project dependencies and metadata
+├── rust/                # Rust CLI implementation
+│   ├── src/
+│   │   ├── main.rs          # CLI argument parsing and entry point
+│   │   ├── update.rs        # Core update logic and SteamCMD integration
+│   │   ├── modconfig.rs     # XML parsing for modconfig.xml
+│   │   └── utils/
+│   │       ├── mod.rs       # Utilities module
+│   │       └── fs.rs        # File system operations (copying/linking)
+│   └── Cargo.toml           # Project dependencies and metadata
+├── go/                  # Go library implementation
+│   ├── modupdater.go        # Main library interface
+│   ├── modconfig.go         # XML parsing
+│   ├── steamcmd.go          # SteamCMD execution
+│   ├── fileops.go           # File operations
+│   ├── modupdater_test.go   # Tests
+│   ├── go.mod               # Go module file
+│   ├── README.md            # Go library documentation
+│   └── examples/            # Usage examples
 └── modconfig.xml        # Example configuration file
 ```
 
@@ -244,9 +218,15 @@ The `modconfig.xml` file follows the Stationeers server format:
 ## Contributing
 
 Contributions are welcome! Please ensure:
+
+For Rust code:
 - Code follows Rust formatting standards (`cargo fmt`)
 - No new warnings are introduced (`cargo clippy`)
-- Existing functionality is not broken
+
+For Go code:
+- Code follows Go formatting standards (`go fmt`)
+- Passes `go vet` checks
+- Includes tests for new functionality
 
 ## License
 
