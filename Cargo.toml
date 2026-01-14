@@ -1,0 +1,19 @@
+[package]
+name = "stationeers_server_mod_updates"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "st-update"
+path = "./src/main.rs"
+
+[dependencies]
+quick-xml = { version = "0.39", features = ["serialize"] }
+serde = { version = "1", features = ["derive"] }
+clap = { version = "4", features = ["derive", "env"] }
+tokio = { version = "1", features = ["full"] }
+thiserror = { version = "2" }
+which = { version = "8" }
+anyhow = { version = "1" }
+colored = { version = "3" }
+regex = { version = "1" }

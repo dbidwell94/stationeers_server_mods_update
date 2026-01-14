@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Core Enabled="true">
+    <Path />
+  </Core>
+  <Local Enabled="false">
+    <Path Value="/app/mods/Workshop_3614893812" />
+  </Local>
+  <Local Enabled="false">
+    <Path Value="/app/mods/Workshop_3587239682" />
+  </Local>
+  <Local Enabled="false">
+    <Path Value="/app/mods/Workshop_3586857584" />
+  </Local>
+  <Local Enabled="true">
+    <Path Value="/app/mods/Workshop_3576112002" />
+  </Local>
+  <Local Enabled="true">
+    <Path Value="/app/mods/Workshop_3575689739" />
+  </Local>
+  <Local Enabled="false">
+    <Path Value="/app/mods/Workshop_3573053238" />
+  </Local>
+  <Local Enabled="false">
+    <Path Value="/app/mods/Workshop_3553424009" />
+  </Local>
+  <Local Enabled="true">
+    <Path Value="/app/mods/Workshop_3505115682" />
+  </Local>
+  <Local Enabled="true">
+    <Path Value="/app/mods/Workshop_3505169479" />
+  </Local>
+  <Local Enabled="true">
+    <Path Value="/app/mods/Workshop_2876605527" />
+  </Local>
+</ModConfig>
